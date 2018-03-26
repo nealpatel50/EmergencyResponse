@@ -35,12 +35,16 @@ def index(request):
     lng = 0
     time = ''
 
-    if 'address' in request.POST:
+    if 'address' in request.POST and 'time' in request.POST:
         address = request.POST['address']
         time = request.POST['time']
         geocode_result = gmaps.geocode(address)
         lat = geocode_result[0]['geometry']['location']['lat']
         lng = geocode_result[0]['geometry']['location']['lng']
+        probabilities = dispatch_probabilities(lat, lng, time)
+        most_likely = most_likely_dispatch(lat, lng, time)
+        print(probabilities)
+        print(most_likely)
         print(lat)
         print(lng)
     else:
@@ -48,10 +52,7 @@ def index(request):
         time = 'time'
         return HttpResponse(template.render(context, request))
 
-    probabilities = dispatch_probabilities(lat, lng, time)
-    most_likely = most_likely_dispatch(lat, lng, time)
-    print(probabilities)
-    print(most_likely)
+
 
 
     context = {
