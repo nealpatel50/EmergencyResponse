@@ -26,7 +26,7 @@ def index(request):
         address = request.POST['address']
         time = request.POST['time']
         geocode_result = gmaps.geocode(address)
-        print(geocode_result)
+        print(geocode_result['geometry']['location'])
     except:
         address = 'address'
         time = 'time'
