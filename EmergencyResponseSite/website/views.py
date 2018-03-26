@@ -23,6 +23,14 @@ def index(request):
     print(request.POST)
     address = None
     time = None
+
+    file = open(os.path.join(settings.STATIC_ROOT, 'website/sfpd_dispatch_data_subset.csv'))
+    stream = pandas.read_csv(file)
+    num_of_closest_locs = 10
+    max_dist = 5
+    hours_between = 3
+    total_medical_incidents = 6791
+
     if 'address' in request.POST:
         address = request.POST['address']
         time = request.POST['time']
@@ -31,17 +39,17 @@ def index(request):
         lng = geocode_result[0]['geometry']['location']['lng']
         print(lat)
         print(lng)
-        # print(res_dict)
     else:
         address = 'address'
         time = 'time'
+        return HttpResponse(template.render(context, request))
 
-    file = open(os.path.join(settings.STATIC_ROOT, 'website/sfpd_dispatch_data_subset.csv'))
-    stream = pandas.read_csv(file)
-    num_of_closest_locs = 10
-    max_dist = 5
-    hours_between = 3
-    total_medical_incidents = 6791
+    probabilities = dispatch_probabilities(lat, lng, time)
+    most_likely = most_likely_dispatch(lat, lng, time)
+    print(probabilities)
+    print(most_likely)
+
+
     context = {
         
     }
