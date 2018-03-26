@@ -27,8 +27,8 @@ def index(request):
         address = request.POST['address']
         time = request.POST['time']
         geocode_result = gmaps.geocode(address)
-        res_dict = json.loads(geocode_result)
-        print(res_dict)
+        print(geocode)
+        # print(res_dict)
     else:
         address = 'address'
         time = 'time'
