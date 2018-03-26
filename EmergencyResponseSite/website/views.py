@@ -13,6 +13,7 @@ import operator
 import os
 from django.contrib.staticfiles.templatetags.staticfiles import static
 import googlemaps
+import json
 
 gmaps = googlemaps.Client(key='AIzaSyCy2ieyQ18TM0_V2rpLj7M2rSUf-dNy3Jk')
 
@@ -26,7 +27,8 @@ def index(request):
     address = request.POST['address']
     time = request.POST['time']
     geocode_result = gmaps.geocode(address)
-    print(geocode_result['geometry'])
+    res_dict = json.loads(geocode_result)
+    print(res_dict)
     # except:
         # address = 'address'
         # time = 'time'
