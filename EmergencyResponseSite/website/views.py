@@ -26,10 +26,7 @@ def index(request):
 
     file = open(os.path.join(settings.STATIC_ROOT, 'website/sfpd_dispatch_data_subset.csv'))
     stream = pandas.read_csv(file)
-    num_of_closest_locs = 10
-    max_dist = 5
-    hours_between = 3
-    total_medical_incidents = 6791
+
 
     lat = 0
     lng = 0
@@ -107,9 +104,11 @@ def truncate(f, n):
                  updated with the current location    
 """
 def update_closest(closest, i, dist, time, time2):
+    hours_between = 3
+    max_dist = 5
     largest_ele = 0
     largest_ele_index = -1
-    global num_of_closest_locs
+    num_of_closest_locs = 20
     for j, ele in enumerate(closest):
         if ele[0] >= largest_ele:
             largest_ele = ele[0]
@@ -125,7 +124,7 @@ def update_closest(closest, i, dist, time, time2):
 """
 
 def closest_locations(loc1_latitude, loc1_longitude, time):
-    global num_of_closest_locs
+    num_of_closest_locs = 20
     time = convert_to_min(time)
     closest = [(sys.maxsize, []) for i in range(num_of_closest_locs)]
     for i in range(len(stream)):
@@ -152,7 +151,7 @@ def closest_locations(loc1_latitude, loc1_longitude, time):
 
 def dispatch_probabilities(loc1_latitude, loc1_longitude, time):
     closest = closest_locations(loc1_latitude, loc1_longitude, time)
-    global num_of_closest_locs
+    num_of_closest_locs = 20
     unit_types = {}
     probabilities = {}
     for i in range(len(stream)):
@@ -270,6 +269,7 @@ def longest_dispatch_times():
 """
 
 def als_frequency():
+    total_medical_incidents = 6791
     als_no_threat_counter = 0
     als_threat_counter = 0
     no_als_no_threat_counter = 0
