@@ -19,7 +19,6 @@ from geopy.geocoders import Nominatim
 
 def index(request):
     template = loader.get_template('website/index.html')
-    print(request.POST)
     address = None
     time = None
     geolocator = Nominatim()
