@@ -96,7 +96,7 @@
           <h2 style="color:white;"><center>Frequency of Incidents (Call Types)</center></h2>
               <img src="{% static "website/img/marker-map-key.jpg" %}"
               width="600"
-              height="100">
+              height="75">
           </div>
            <link href="{% static "website/vendor/bootstrap/css/bootstrap.min.css" %}" rel="stylesheet">
 
@@ -36000,14 +36000,17 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCy2ieyQ18TM0_V2rpLj7M2rSU
     <section id="download" class="download-section content-section text-center">
       <div class="container">
         <div class="col-lg-8 mx-auto">
+          <h2 style="color:white;">Find Out the Dispatch Likelihood in Your Area!</h2>
           <form action="/website/" method="post">
             {% csrf_token %}
             <label for="website">Address: </label>
             <input id="address" type="text" name="address" value="{{ current_address }}"/> <br>
+            <h2></h2>
             <label for="website">Time(HH:MM:SS): </label>
             <input id="time" type="text" name="time" value="{{ current_time }}"/> <br>
             <input type="submit" value="OK" />
           </form> 
+          <h2></h2>
           <p>Unit Dispatch Probabilities:</p>
           {% for prob in probabilities %}
           <p> {{ prob }}</p>
