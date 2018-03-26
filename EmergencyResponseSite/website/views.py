@@ -50,6 +50,9 @@ def index(request):
     else:
         address = 'address'
         time = 'time'
+        context = {
+        
+        }
         return HttpResponse(template.render(context, request))
 
 
