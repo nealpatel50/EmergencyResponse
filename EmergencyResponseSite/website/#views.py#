@@ -1,0 +1,91 @@
+from __future__ import unicode_literals
+
+from django.shortcuts import render
+
+from django.http import HttpResponse
+from django.template import loader
+
+import math
+import pandas
+import sys
+import operator
+
+def index(request):
+    #print(dispatch_probabilities(37.831666, -122.51365))
+    #print(most_likely_dispatch(37.831666, -122.51365))
+    #print(distance(37.831666, -122.51365, 37.7086241, -122.36514))
+    template = loader.get_template('website/index.html')
+    print(request.POST)
+    address = request.POST['address']
+    time = request.POST['time']
+    context = {
+        
+    }
+    return HttpResponse(template.render(context, request))
+
+#stream = pandas.read_csv('sfpd_dispatch_data_subset.py')
+
+#num_of_closest_locs = 10
+#max_dist = 5
+#hours_between = 3
+
+"""
+    Method:      distance
+    Description: Finds the distance between two GPS coordinates, factoring in the curvature of the Earth using a 
+                 simplified version of the Haversine formula
+"""
+def distance(loc1_latitude, loc1_longitude, loc2_latitude, loc2_longitude):
+    earth_radius = 6371
+    deg_to_dist_coeff = earth_radius/360
+    dist_latitude = (loc2_latitude - loc1_latitude) * deg_to_dist_coeff
+    dist_longitude = (loc2_longitude - loc1_longitude) * deg_to_dist_coeff * math.cos(loc1_latitude * math.pi/180)
+    dist = math.sqrt(dist_latitude * dist_latitude + dist_longitude * dist_longitude)
+    return dist
+
+"""
+    Method:      update_closest
+    Description: If current element is closer than the furthest element in closest, then the location of the furthest
+                 element in the list is updated with the current element    
+"""
+def update_closest(closest, i, dist):
+    largest_ele = 0
+    largest_ele_index = -1
+    for j, ele in enumerate(closest):
+        if ele[0] >= largest_ele:
+            largest_ele = ele[0]
+            largest_ele_index = j
+    if dist < largest_ele and dist <= max_dist:
+        closest[largest_ele_index] = [dist, stream.iloc[i]]
+
+
+def closest_locations(loc1_latitude, loc1_longitude):
+    closest = [(sys.maxsize, []) for i in range(num_of_closest_locs)]
+    for i in range(len(stream)):
+        loc2_latitude = stream.iloc[i]['latitude']
+        loc2_longitude = stream.iloc[i]['longitude']
+        dist = distance(loc1_latitude, loc1_longitude, loc2_latitude, loc2_longitude)
+        update_closest(closest, i, dist)
+    return closest
+
+
+def dispatch_probabilities(loc1_latitude, loc1_longitude):
+    closest = closest_locations(loc1_latitude, loc1_longitude)
+    call_types = {}
+    probabilities = {}
+    for i in range(len(stream)):
+        if stream.iloc[i]['call_type'] not in call_types:
+            call_types[stream.iloc[i]['call_type']] = 0
+    for ele in closest:
+        call_types[ele[1][3]] += 1
+    for incident in call_types:
+        if call_types[incident] != 0:
+            prob = call_types[incident] / num_of_closest_locs
+            probabilities[incident] = prob
+    return probabilities
+
+
+def most_likely_dispatch(loc1_latitude, loc1_longitude):
+    probabilities = dispatch_probabilities(loc1_latitude, loc1_longitude)
+    sorted_probabilities = sorted(probabilities.items(), key=operator.itemgetter(1))
+    most_likely = sorted_probabilities[len(sorted_probabilities) - 1][0]
+    return most_likely
