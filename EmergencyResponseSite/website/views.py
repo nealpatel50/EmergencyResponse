@@ -38,8 +38,8 @@ def index(request):
         geocode_result = gmaps.geocode(address)
         lat = geocode_result[0]['geometry']['location']['lat']
         lng = geocode_result[0]['geometry']['location']['lng']
-        probabilities = dispatch_probabilities(lat, lng, time)
-        most_likely = most_likely_dispatch(lat, lng, time)
+        probabilities = dispatch_probabilities(lat, lng, time, stream)
+        most_likely = most_likely_dispatch(lat, lng, time, stream)
         print(probabilities)
         print(most_likely)
         print(lat)
@@ -103,7 +103,7 @@ def truncate(f, n):
                  occurred close to the time of the incident, then the location of the furthest location in the list is 
                  updated with the current location    
 """
-def update_closest(closest, i, dist, time, time2):
+def update_closest(closest, i, dist, time, time2, stream):
     hours_between = 3
     max_dist = 5
     largest_ele = 0
@@ -123,7 +123,7 @@ def update_closest(closest, i, dist, time, time2):
                  location passed in and returns a list of closest locations with their corresponding distances
 """
 
-def closest_locations(loc1_latitude, loc1_longitude, time):
+def closest_locations(loc1_latitude, loc1_longitude, time, stream):
     num_of_closest_locs = 20
     time = convert_to_min(time)
     closest = [(sys.maxsize, []) for i in range(num_of_closest_locs)]
@@ -134,7 +134,7 @@ def closest_locations(loc1_latitude, loc1_longitude, time):
         time2 = received_timestamp[10:19]
         time2 = convert_to_min(time2)
         dist = distance(loc1_latitude, loc1_longitude, loc2_latitude, loc2_longitude)
-        update_closest(closest, i, dist, time, time2)
+        update_closest(closest, i, dist, time, time2, stream)
     for k, ele in enumerate(closest):
         if ele[0] == sys.maxsize:
             closest.pop(k)
@@ -149,8 +149,8 @@ def closest_locations(loc1_latitude, loc1_longitude, time):
                  dictionary with the likely unit types and their corresponding probabilities
 """
 
-def dispatch_probabilities(loc1_latitude, loc1_longitude, time):
-    closest = closest_locations(loc1_latitude, loc1_longitude, time)
+def dispatch_probabilities(loc1_latitude, loc1_longitude, time, stream):
+    closest = closest_locations(loc1_latitude, loc1_longitude, time, stream)
     num_of_closest_locs = 20
     unit_types = {}
     probabilities = {}
@@ -173,8 +173,8 @@ def dispatch_probabilities(loc1_latitude, loc1_longitude, time):
                  occur in that location by finding the location with the highest probability
 """
 
-def most_likely_dispatch(loc1_latitude, loc1_longitude, time):
-    probabilities = dispatch_probabilities(loc1_latitude, loc1_longitude, time)
+def most_likely_dispatch(loc1_latitude, loc1_longitude, time, stream):
+    probabilities = dispatch_probabilities(loc1_latitude, loc1_longitude, time, stream)
     sorted_probabilities = sorted(probabilities.items(), key=operator.itemgetter(1))
     most_likely = sorted_probabilities[len(sorted_probabilities) - 1][0]
     return most_likely
@@ -197,7 +197,7 @@ def convert_to_sec(time_str):
                  the total number of zipcodes to get the average dispatch time.
 """
 
-def update_dispatch_times(dispatch_times):
+def update_dispatch_times(dispatch_times, stream):
     total_dispatch_time = 0
     counter = 0
     for code in dispatch_times.keys():
@@ -240,12 +240,12 @@ def sort_dispatch_times(updated_dispatch_times):
                  list of zipcodes sorted by their average dispatch times from shortest to longest
 """
 
-def area_dispatch_times():
+def area_dispatch_times(stream):
     dispatch_times = {}
     for i in range(len(stream)):
         if stream.iloc[i]['zipcode_of_incident'] not in dispatch_times:
             dispatch_times[stream.iloc[i]['zipcode_of_incident']] = 0
-    updated_dispatch_times = update_dispatch_times(dispatch_times)
+    updated_dispatch_times = update_dispatch_times(dispatch_times, stream)
     sorted_dispatch_times = sort_dispatch_times(updated_dispatch_times)
     return sorted_dispatch_times
 
@@ -268,7 +268,7 @@ def longest_dispatch_times():
 
 """
 
-def als_frequency():
+def als_frequency(stream):
     total_medical_incidents = 6791
     als_no_threat_counter = 0
     als_threat_counter = 0
