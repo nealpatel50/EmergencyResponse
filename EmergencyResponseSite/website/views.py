@@ -23,15 +23,15 @@ def index(request):
     print(request.POST)
     address = None
     time = None
-    # try:
-    address = request.POST['address']
-    time = request.POST['time']
-    geocode_result = gmaps.geocode(address)
-    res_dict = json.loads(geocode_result)
-    print(res_dict)
-    # except:
-        # address = 'address'
-        # time = 'time'
+    if 'address' in request.POST:
+        address = request.POST['address']
+        time = request.POST['time']
+        geocode_result = gmaps.geocode(address)
+        res_dict = json.loads(geocode_result)
+        print(res_dict)
+    else:
+        address = 'address'
+        time = 'time'
 
     file = open(os.path.join(settings.STATIC_ROOT, 'website/sfpd_dispatch_data_subset.csv'))
     stream = pandas.read_csv(file)
