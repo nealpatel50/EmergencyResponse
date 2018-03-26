@@ -108,7 +108,7 @@ def update_closest(closest, i, dist, time, time2, stream):
     max_dist = 5
     largest_ele = 0
     largest_ele_index = -1
-    num_of_closest_locs = 20
+    num_of_closest_locs = 10
     for j, ele in enumerate(closest):
         if ele[0] >= largest_ele:
             largest_ele = ele[0]
@@ -124,7 +124,7 @@ def update_closest(closest, i, dist, time, time2, stream):
 """
 
 def closest_locations(loc1_latitude, loc1_longitude, time, stream):
-    num_of_closest_locs = 20
+    num_of_closest_locs = 10
     time = convert_to_min(time)
     closest = [(sys.maxsize, []) for i in range(num_of_closest_locs)]
     for i in range(len(stream)):
@@ -151,7 +151,7 @@ def closest_locations(loc1_latitude, loc1_longitude, time, stream):
 
 def dispatch_probabilities(loc1_latitude, loc1_longitude, time, stream):
     closest = closest_locations(loc1_latitude, loc1_longitude, time, stream)
-    num_of_closest_locs = 20
+    num_of_closest_locs = 10
     unit_types = {}
     probabilities = {}
     for i in range(len(stream)):
