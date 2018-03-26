@@ -56,7 +56,7 @@ def index(request):
 
 
     context = {
-        
+        "probabilities": probabilities
     }
     return HttpResponse(template.render(context, request))
 

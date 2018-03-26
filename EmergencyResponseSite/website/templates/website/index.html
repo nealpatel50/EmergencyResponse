@@ -36038,11 +36038,11 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCy2ieyQ18TM0_V2rpLj7M2rSU
             {% csrf_token %}
             <label for="website">Address: </label>
             <input id="address" type="text" name="address" value="{{ current_address }}"/> <br>
-            <label for="website">Time: </label>
+            <label for="website">Time(HH:MM:SS): </label>
             <input id="time" type="text" name="time" value="{{ current_time }}"/> <br>
             <input type="submit" value="OK" />
           </form> 
-          <p>{{probabilities}}</p>
+          <p>{{ probabilities }}</p>
         </div>
       </div>
     </section>
