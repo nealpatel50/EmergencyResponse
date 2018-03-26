@@ -48,7 +48,7 @@
               <a class="nav-link js-scroll-trigger" href="#contact">Longest Dispatches</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#map">Heatmap</a>
+              <a class="nav-link js-scroll-trigger" href="#heatmap">Heatmap</a>
             </li>
           </ul>
         </div>
@@ -35999,7 +35999,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCy2ieyQ18TM0_V2rpLj7M2rSU
     <!-- Download Section -->
     <section id="download" class="download-section content-section text-center">
       <div class="container">
-        <div class="col-lg-8 mx-auto">
+        <div class="col-lg-14 mx-auto">
           <h2 style="color:white;">Find Out the Dispatch Likelihood in Your Area!</h2>
           <form action="/website/" method="post">
             {% csrf_token %}
@@ -36030,6 +36030,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCy2ieyQ18TM0_V2rpLj7M2rSU
                  width="475"
                  height="375">
                  <p style="color:white;"">Longest Dispatch Times: 94110: 0:20:27, 94107: 0:23:49, 94109: 0:24:32, 94122: 0:26:17, 94103: 0:29:17</p>
+                 <section id="heatmap" class="content-section text-center">
                 <h2 style="color:white;">Heatmap of Dispatches</h2>
               <img src="{% static "website/img/heat-map.jpg" %}"
                   width="475"
