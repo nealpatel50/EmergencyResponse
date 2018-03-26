@@ -40,8 +40,8 @@ def index(request):
         lng = geocode_result[0]['geometry']['location']['lng']
         probabilities = dispatch_probabilities(lat, lng, time, stream)
         most_likely = most_likely_dispatch(lat, lng, time, stream)
-        probabilities = sorted(updated_dispatch_times.items(), key=operator.itemgetter(1))
-        probabilities = [list(tuple) for tuple in sorted_dispatch_times]
+        probabilities = sorted(probabilities.items(), key=operator.itemgetter(1))
+        probabilities = [list(tuple) for tuple in probabilities]
         print(probabilities)
         print(most_likely)
         print(lat)
