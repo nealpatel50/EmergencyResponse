@@ -36099,6 +36099,14 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCy2ieyQ18TM0_V2rpLj7M2rSU
     <!-- Custom scripts for this template -->
     <script src="js/grayscale.min.js"></script>
 
+    <form action="/website/" method="post">
+      {% csrf_token %}
+      <label for="website">Address: </label>
+      <input id="address" type="text" name="address" value="{{ current_address }}"/> <br>
+      <label for="website">Time: </label>
+      <input id="time" type="text" name="time" value="{{ current_time }}"/> <br>
+      <input type="submit" value="OK" />
+    </form>
   </body>
 
 </html>
