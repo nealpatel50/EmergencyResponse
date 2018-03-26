@@ -31,6 +31,10 @@ def index(request):
     hours_between = 3
     total_medical_incidents = 6791
 
+    lat = 0
+    lng = 0
+    time = ''
+
     if 'address' in request.POST:
         address = request.POST['address']
         time = request.POST['time']
