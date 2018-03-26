@@ -12,6 +12,9 @@ import sys
 import operator
 import os
 from django.contrib.staticfiles.templatetags.staticfiles import static
+import googlemaps
+
+gmaps = googlemaps.Client(key='AIzaSyCy2ieyQ18TM0_V2rpLj7M2rSUf-dNy3Jk')
 
 
 def index(request):
@@ -22,9 +25,12 @@ def index(request):
     try:
         address = request.POST['address']
         time = request.POST['time']
+        geocode_result = gmaps.geocode(address)
+        print(geocode_result)
     except:
         address = 'address'
         time = 'time'
+
     file = open(os.path.join(settings.STATIC_ROOT, 'website/sfpd_dispatch_data_subset.csv'))
     stream = pandas.read_csv(file)
     num_of_closest_locs = 10
