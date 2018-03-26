@@ -12,9 +12,9 @@ import sys
 import operator
 import os
 from django.contrib.staticfiles.templatetags.staticfiles import static
-import googlemaps
+from geopy.geocoders import Nominatim
 
-gmaps = googlemaps.Client(key='AIzaSyCy2ieyQ18TM0_V2rpLj7M2rSUf-dNy3Jk')
+
 
 
 def index(request):
@@ -22,11 +22,13 @@ def index(request):
     print(request.POST)
     address = None
     time = None
+    geolocator = Nominatim()
     try:
         address = request.POST['address']
         time = request.POST['time']
-        geocode_result = gmaps.geocode(address)
-        print(geocode_result)
+        location = geolocator.geocode(address)
+        print(location.address)
+        print(location.latitude, location.longitude)
     except:
         address = 'address'
         time = 'time'
