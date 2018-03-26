@@ -158,6 +158,7 @@ def dispatch_probabilities(loc1_latitude, loc1_longitude, time, stream):
         if stream.iloc[i]['unit_type'] not in unit_types:
             unit_types[stream.iloc[i]['unit_type']] = 0
     for ele in closest:
+        print(unit_types)
         unit_types[ele[1][27]] += 1
     for unit in unit_types:
         if unit_types[unit] != 0:
